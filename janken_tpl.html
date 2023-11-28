@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>じゃんけんゲーム</title>
+    <script src="./js/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+  <div align="center">
+    <h2>じゃんけんゲーム✊✌️✋</h2>
+    「Let's GO!!」を押した後に、<p>「グー✊」「チョキ✌️」「パー✋」を選んでください！</p>
+    <br>
+    <table border="1" style="border-collapse: collapse">
+        <tr>
+            <td align="center"><h2>　自分　<div id="PlayerHand">グー</div></h2></td>
+            <td align="center"><h2>　相手　<div id="RivalHand">グー</div></h2></td>
+        </tr>
+    </table>
+    <br>
+    <button id="startButton" onclick="start();"><h2>Let's GO!!</h2></button>
+    <button id="gooButton" onclick="janken('グー');" disabled="true"><h2>グー</h2></button>
+    <button id="chokiButton" onclick="janken('チョキ');" disabled="true"><h2>チョキ</h2></button>
+    <button id="parButton" onclick="janken('パー');" disabled="true"><h2>パー</h2></button>
+    <br>
+    <div id="Result"></div>
+</div>
+<script>
+const FPS = 30; 
+        const HANDS = ['グー', 'チョキ', 'パー']; 
+        let lastRivalHandIndex = 0; 
+        let gameLoopInterbalId = null; 
+
+        function gameLoop() {
+            const handIndex = (lastRivalHandIndex + 1) % 3;
+            lastRivalHandIndex = handIndex;
+            document.getElementById("RivalHand").innerHTML = HANDS[handIndex];
+        }
+        
+        function start() {
+            document.getElementById("startButton").disabled = true;
+            document.getElementById("gooButton").disabled = false;
+            document.getElementById("chokiButton").disabled = false;
+            document.getElementById("parButton").disabled = false;
+            document.getElementById("PlayerHand").innerHTML = '　';
+            document.getElementById("Result").innerHTML = '';
+            
+            gameLoopInterbalId = setInterval(gameLoop, 1000 / FPS);
+        }
+        
+        function janken(playerHand) {
+            clearInterval(gameLoopInterbalId);
+          
+            document.getElementById("PlayerHand").innerHTML = playerHand;
+            document.getElementById("startButton").disabled = false;
+            document.getElementById("gooButton").disabled = true;
+            document.getElementById("chokiButton").disabled = true;
+            document.getElementById("parButton").disabled = true;
+            
+            const rivalHand = HANDS[lastRivalHandIndex];
+            let result = "";
+
+          
+            if (playerHand === rivalHand) {
+                result = "あいこです。";
+            } else if(playerHand === 'グー' && rivalHand === 'チョキ' ||
+                      playerHand === 'チョキ' && rivalHand === 'パー' ||
+                      playerHand === 'パー' && rivalHand === 'グー') {
+                result = "あなたの勝ちです！おめでとうございます！🎉";
+            } else {
+                result = "残念。あなたの負けです。😭";
+            }            
+
+            //　結果を表示
+            document.getElementById("Result").innerHTML = result;
+        }
+
+</script>
+</body>
+</html>
